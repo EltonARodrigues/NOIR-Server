@@ -1,0 +1,13 @@
+#lista-size {
+    height: 300px;
+    width: 400px;
+    left: 40%;
+    position: relative;
+    transform: translateY(10%);
+
+}
+
+
+#teste{
+    padding: 5px;
+  }
