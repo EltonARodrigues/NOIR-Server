@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     #'noir.apps.NoirConfig',
+    #'rest_framework_swagger',
     'rest_framework',
     'noir',
     'widget_tweaks',

@@ -24,6 +24,8 @@ from rest_framework_csv.renderers import CSVRenderer
 from rest_framework.authentication import SessionAuthentication
 from rest_framework.permissions import IsAdminUser, IsAuthenticated, AllowAny
 import json
+import requests
+from io import StringIO
 
 
 class SignUp(CreateView):
@@ -34,7 +36,6 @@ class SignUp(CreateView):
 class SelecaoView(View):
     initial = {'key': 'value'}
     template_name = 'home.html'
-    #redirect_feld_name = 'login'
 
     def get(self, request, *args, **kwargs):
         if request.user.is_authenticated:
@@ -48,29 +49,31 @@ class Graph(LoginRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(Graph, self).get_context_data(**kwargs)
-        global id_pk
 
         lowest_values = []
         higher_values = []
         avg_values = []
-        count_values = []
 
-        id_pk = self.kwargs.get('pk')
         cadastros = Cadastro.objects.filter(author_id = self.request.user)
-        if id_pk == None:
+        if self.kwargs.get('pk') == None:
             context['lists'] = cadastros
             context['selec'] = ''
             return context
-        elif Cadastro.objects.filter(id = int(id_pk), author_id = self.request.user):
 
-            qs = Valores.objects.filter(id = int(id_pk))
+        elif Cadastro.objects.filter(id = int(self.kwargs.get('pk')), author_id = self.request.user):
+
+            qs = Valores.objects.filter(id = int(self.kwargs.get('pk')))
 
             for n in ['temperature', 'humidity', 'co', 'co2', 'mp25']:
-                lowest_values.append(list(qs.aggregate(Min(n)).values())[0])
-                higher_values.append(list(qs.aggregate(Max(n)).values())[0])
-                avg_values.append(list(qs.aggregate(Avg(n)).values())[0])
+                try:
+                    lowest_values.append(list(qs.aggregate(Min(n)).values())[0])
+                    higher_values.append(list(qs.aggregate(Max(n)).values())[0])
+                    avg_values.append(round(list(qs.aggregate(Avg(n)).values())[0],2))
+                except:
+                    pass
 
             context['lists'] = cadastros
+            context['count'] = Valores.objects.filter(id_id=self.kwargs.get('pk')).count()
             context['avg_values'] = avg_values
             context['lowest_values'] = lowest_values
             context['higher_values'] = higher_values
@@ -84,7 +87,6 @@ class Graph(LoginRequiredMixin, TemplateView):
             return context
         else:
             return context
-
 
 class ClientViewSetJSON(viewsets.ModelViewSet):
     queryset = Valores.objects.all()
@@ -147,23 +149,11 @@ def nova_medicao(request):
                 csv_file = request.FILES["file_csv"]
                 file_data = csv_file.read().decode("utf-8")
 
-                com = Valores()
+                #com = Valores()
 
                 f = StringIO(file_data)
-                reader = csv.reader(f, delimiter=',')
-                for row in reader:
-                    print(float(row[1]))
-                    print(float(row[2]))
-                    print(float(row[3]))
-                    print(float(row[4]))
-                    com.co = float(row[2])
-                    com.co2 = float(row[3])
-                    com.pm25 = float(row[4])
-                    com.data = '2000-03-03'#received_json_data['created_at']
-                    com.temperatura = row[0]
-                    com.umidade = float(row[1])
-                    #com.cadastro_id = medicao.pk
-                    com.save()
+                print(file_data)
+                #r = requests.post('http://localhost:8000/api/csv/', files={'teste.csv':file_data })
 
             return redirect('get_context_data', pk=medicao.pk)
     else:

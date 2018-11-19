@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-
+{% load static %}
 {% block menu %}
 
 <li class="nav-item ">
@@ -19,7 +19,7 @@
             <nav class="col-md-2 d-none d-md-block bg-light sidebar">
               <div class="sidebar-sticky">
                 <ul class="nav flex-column">
-                    {% if pk %}
+
                   <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
                     <span>Valores Recebidos</span>
                 </h6>
@@ -53,7 +53,7 @@
                         Material Particulado<span class="sr-only">(current)</span>
                         </a>
                    </li>
-                   {% endif %}
+                   
                    <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
                         <span>Outras Medições:</span>
                     </h6>
@@ -79,11 +79,10 @@
               </div>
 
               <canvas class="my-4 w-100 chartjs-render-monitor" id="myChart" width="1535" height="550" style="display: block; width: 1535px; height: 550px;"></canvas>
-
               <h2>Informações</h2>
               <div class="table-responsive">
                 <table class="table table-striped table-sm">
-                  <thead>
+                  <thead class="text-center">
                     <tr>
                       <th></th>
                       <th>Quantidade de valores</th>
@@ -92,41 +91,41 @@
                       <th>Media</th>
                     </tr>
                   </thead>
-                  <tbody>
+                  <tbody >
                     <tr>
                       <td>Temperatura</td>
-                      <td>temp</td>
-                      <td>{{ lowest_values.0 }}</td>
-                      <td>{{ higher_values.0 }}</td>
-                      <td>{{ avg_values.0 }}</td>
+                      <td class="text-center">{{ count }}</td>
+                      <td class="text-center">{{ lowest_values.0 }}</td>
+                      <td class="text-center">{{ higher_values.0 }}</td>
+                      <td class="text-center">{{ avg_values.0 }}</td>
                     </tr>
                     <tr>
                         <td>Umidade</td>
-                        <td>temp</td>
-                        <td>{{ lowest_values.1 }}</td>
-                        <td>{{ higher_values.1 }}</td>
-                        <td>{{ avg_values.1 }}</td>
+                        <td class="text-center">{{ count }}</td>
+                        <td class="text-center">{{ lowest_values.1 }}</td>
+                        <td class="text-center">{{ higher_values.1 }}</td>
+                        <td class="text-center">{{ avg_values.1 }}</td>
                         </tr>
                     <tr>
-                        <td>Dioxido de carbono</td>
-                        <td>temp</td>
-                        <td>{{ lowest_values.2 }}</td>
-                        <td>{{ higher_values.2 }}</td>
-                        <td>{{ avg_values.2 }}</td>
+                        <td>Monoxido de carbono</td>
+                        <td class="text-center">{{ count }}</td>
+                        <td class="text-center">{{ lowest_values.2 }}</td>
+                        <td class="text-center">{{ higher_values.2 }}</td>
+                        <td class="text-center">{{ avg_values.2 }}</td>
                     </tr>
                     <tr>
-                       <td>Monoxido de carbono</td>
-                        <td>temp</td>
-                        <td>{{ lowest_values.3 }}</td>
-                        <td>{{ higher_values.3 }}</td>
-                        <td>{{ avg_values.3 }}</td>
+                       <td>Dioxidode carbono</td>
+                       <td class="text-center">{{ count }}</td>
+                       <td class="text-center">{{ lowest_values.3 }}</td>
+                       <td class="text-center">{{ higher_values.3 }}</td>
+                       <td class="text-center">{{ avg_values.3 }}</td>
                     </tr>
                     <tr>
                         <td>Material Particuado</td>
-                        <td>temp</td>
-                        <td>{{ lowest_values.4 }}</td>
-                        <td>{{ higher_values.4 }}</td>
-                        <td>{{ avg_values.4 }}</td>
+                        <td class="text-center">{{ count }}</td>
+                        <td class="text-center">{{ lowest_values.4 }}</td>
+                        <td class="text-center">{{ higher_values.4 }}</td>
+                        <td class="text-center">{{ avg_values.4 }}</td>
                     </tr>
                   </tbody>
                 </table>
@@ -135,21 +134,13 @@
           </div>
         </div>
 
-        <!-- Bootstrap core JavaScript
-        ================================================== -->
-        <!-- Placed at the end of the document so the pages load faster -->
-        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
-
-        <!-- Icons -->
-        <script src="https://unpkg.com/feather-icons/dist/feather.min.js"></script>
+        <script src="{% static 'js/feather.min.js' %}"></script>
         <script>
           feather.replace()
         </script>
 
         <!-- Graphs -->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>
+        <script src="{% static 'js/Chart.min.js' %}"></script>
         <script>
 
           var ctx = document.getElementById("myChart");
@@ -157,7 +148,7 @@
           function grafico(tipo='temp') {
             tipo_grafico = tipo;
 
-        
+
           var myChart = new Chart(ctx, {
             type: 'line',
             data: {
