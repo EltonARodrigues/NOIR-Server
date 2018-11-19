@@ -38,8 +38,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     #'noir.apps.NoirConfig',
+    'rest_framework',
     'noir',
     'widget_tweaks',
+
 
 ]
 
@@ -132,4 +134,5 @@ STATICFILES_DIRS = [
 LOGIN_REDIRECT_URL = 'get_context_data'
 LOGOUT_REDIRECT_URL = 'home'
 LOGIN_URL = 'get_context_data'
+
 

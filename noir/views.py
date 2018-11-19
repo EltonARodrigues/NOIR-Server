@@ -9,12 +9,21 @@ from .models import Valores, Cadastro
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseRedirect
 from .forms import MedicaoForm
-import plotly.offline as opy
-import plotly.graph_objs as go
-from plotly import tools
-import json
+from .serializers import ValuesSerializer, ValuesFileSerializer
 from django.db.models import Avg, Max, Min, Sum, Count
 from django.contrib.auth import authenticate, login
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import generics
+from rest_framework.decorators import api_view, list_route
+from rest_framework.parsers import FormParser, MultiPartParser
+from rest_framework import viewsets, status
+from rest_framework.settings import api_settings
+from rest_framework_csv.parsers import CSVParser
+from rest_framework_csv.renderers import CSVRenderer
+from rest_framework.authentication import SessionAuthentication
+from rest_framework.permissions import IsAdminUser, IsAuthenticated, AllowAny
+import json
 
 
 class SignUp(CreateView):
@@ -32,7 +41,6 @@ class SelecaoView(View):
             return redirect('get_context_data')
 
         return render(request, self.template_name)
-
 
 class Graph(LoginRequiredMixin, TemplateView):
     template_name = 'graficos.html'
@@ -55,9 +63,9 @@ class Graph(LoginRequiredMixin, TemplateView):
             return context
         elif Cadastro.objects.filter(id = int(id_pk), author_id = self.request.user):
 
-            qs = Valores.objects.filter(cadastro_id = int(id_pk))
+            qs = Valores.objects.filter(id = int(id_pk))
 
-            for n in ['temperatura', 'umidade', 'co', 'co2', 'pm25']:
+            for n in ['temperature', 'humidity', 'co', 'co2', 'mp25']:
                 lowest_values.append(list(qs.aggregate(Min(n)).values())[0])
                 higher_values.append(list(qs.aggregate(Max(n)).values())[0])
                 avg_values.append(list(qs.aggregate(Avg(n)).values())[0])
@@ -66,11 +74,11 @@ class Graph(LoginRequiredMixin, TemplateView):
             context['avg_values'] = avg_values
             context['lowest_values'] = lowest_values
             context['higher_values'] = higher_values
-            context['temp'] = [q.temperatura for q in qs]
-            context['hum'] = [q.umidade for q in qs]
+            context['temp'] = [q.temperature for q in qs]
+            context['hum'] = [q.humidity for q in qs]
             context['co'] = [q.co for q in qs]
             context['co2'] = [q.co2 for q in qs]
-            context['pm'] = [q.pm25 for q in qs]
+            context['pm'] = [q.mp25 for q in qs]
             context['x'] = [q for q in range(len(qs))]
 
             return context
@@ -78,8 +86,52 @@ class Graph(LoginRequiredMixin, TemplateView):
             return context
 
 
+class ClientViewSetJSON(viewsets.ModelViewSet):
+    queryset = Valores.objects.all()
+    serializer_class = ValuesSerializer
+
+    def get_renderer_context(self):
+        context = super(ClientViewSetJSON, self).get_renderer_context()
+        context['header'] = (
+            self.request.GET['fields'].split(',')
+            if 'fields' in self.request.GET else None)
+        return context
+
+    @list_route(methods=['POST'])
+    def json_upload(self, request, *args, **kwargs):
+
+        serializer = ValuesSerializer(data=request.data)
+        serializer.is_valid()
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
+
+class ClientViewSetCSV(viewsets.ModelViewSet):
+
+    queryset = Valores.objects.all()
+    parser_classes = (CSVParser,) + tuple(api_settings.DEFAULT_PARSER_CLASSES)
+    renderer_classes = (CSVRenderer,) + tuple(api_settings.DEFAULT_RENDERER_CLASSES)
+    serializer_class = ValuesFileSerializer
+    #authentication_classes = [BaseAuthentication]
+    #permission_classes = (IsAuthenticated, )
+
+    def get_renderer_context(self):
+        context = super(ClientViewSetCSV, self).get_renderer_context()
+        context['header'] = (
+            self.request.GET['fields'].split(',')
+            if 'fields' in self.request.GET else None)
+        return context
+
+    @list_route(methods=['POST'])
+    def csv_upload(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data, many=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+
+        return Response(serializer.data, status=status.HTTP_303_SEE_OTHER)
+
+#### old ###
 
 def nova_medicao(request):
     if request.method == "POST":
@@ -110,7 +162,7 @@ def nova_medicao(request):
                     com.data = '2000-03-03'#received_json_data['created_at']
                     com.temperatura = row[0]
                     com.umidade = float(row[1])
-                    com.cadastro_id = medicao.pk
+                    #com.cadastro_id = medicao.pk
                     com.save()
 
             return redirect('get_context_data', pk=medicao.pk)
@@ -118,7 +170,7 @@ def nova_medicao(request):
         form = MedicaoForm()
     return render(request, 'setup.html', {'form': form})
 
-
+'''
 @csrf_exempt
 def get_values(request):
     global id_pk
@@ -131,8 +183,10 @@ def get_values(request):
         com.data = '2000-03-03'#received_json_data['created_at']
         com.temperatura = received_json_data['temperature']
         com.umidade = received_json_data['humidity']
-        com.cadastro_id = int(id_pk)
+        #com.cadastro_id = int(id_pk)
+        #com.cadastro = medicao
         com.save()
 
         return redirect('get_context_data', pk=medicao.pk)
         #return StreamingHttpResponse('it was post request: '+str(received_json_data))
+        # '''

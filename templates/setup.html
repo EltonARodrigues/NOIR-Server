@@ -51,7 +51,15 @@
               </div>
             </div>
 
-            <button class="btn btn-primary btn-lg btn-block" type="submit">Continue to checkout</button>
+            <div class=" col-md-6 mb-3">
+                <label for="description">Copie o código de envio:</label>
+                {% render_field form.code class="form-control" %}
+              <div class="invalid-feedback">
+                Please enter a valid csv file.
+              </div>
+            </div>
+
+            <button class="btn btn-primary btn-lg btn-block" type="submit">Create</button>
           </form>
 
       </div>
