@@ -1,8 +1,8 @@
+
 {% extends 'base.html' %}
 {% load widget_tweaks %}
 {% load static %}
 
-<link rel="stylesheet" href="{% static 'form.css' %}">
 
 {% block title %}Novo Valor{% endblock %}
 {% block menu %}
@@ -17,62 +17,33 @@
 
 {% endblock %}
 {% block content %}
+<link rel="stylesheet" href="{% static 'teste.css' %}">
 
-    <div class="container mx-auto">
-      <div class="py-5 text-center">
-        <h2>Criar Novas entradas</h2>
-      </div>
-          <form method="post"  class="container needs-validation "  enctype="multipart/form-data">
-              {% csrf_token %}
-            <div class="row py-5">
-              <div class="col-md-6 mb-3">
-                <label for="firstName">Nome da Instancia</label>
-                {% render_field form.title class="form-control" %}
-                <div class="invalid-feedback">
-                  Valid name is required.
-                </div>
-              </div>
-
-            <div class=" col-md-6 mb-3">
-                <label for="description">Descrição</label>
-                {% render_field form.description class="form-control" %}
-              <div class="invalid-feedback">
-                Please enter a valid csv file.
-              </div>
+        <div class="container mx-auto">
+            <div class="py-1 wrapper">
+              <form method="post"  class="form-wrapper needs-validation "  enctype="multipart/form-data">
+                  {% csrf_token %}
+                <fieldset class="section is-active">
+                  <h3>Create Measurer</h3>
+                  {% render_field form.title class="form-control" %}
+                  {% render_field form.description class="form-control" %}
+                  <input class="submit button" type="submit" value="Create">
+                  {% if form.errors %}
+                    {% for field in form %}
+                        {% for error in field.errors %}
+                            <div class="alert alert-danger">
+                                <strong>{{ error|escape }}</strong>
+                            </div>
+                        {% endfor %}
+                    {% endfor %}
+                    {% for error in form.non_field_errors %}
+                        <div class="alert alert-danger">
+                            <strong>{{ error|escape }}</strong>
+                        </div>
+                    {% endfor %}
+                  {% endif %}
+                </fieldset>
+              </form>
             </div>
-
-            <div class="input-group mb-3">
-              <div class="input-group-prepend">
-                <span class="input-group-text" id="inputGroupFileAddon01">Upload</span>
-              </div>
-              <div class="custom-file">
-                  {% render_field form.file_csv class="custom-file-input"  id="inputGroupFile01" aria-describedby="inputGroupFileAddon01" %}
-                <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
-              </div>
             </div>
-
-            <div class=" col-md-6 mb-3">
-                <label for="description">Copie o código de envio:</label>
-                {% render_field form.code class="form-control" %}
-              <div class="invalid-feedback">
-                Please enter a valid csv file.
-              </div>
-            </div>
-
-            <button class="btn btn-primary btn-lg btn-block" type="submit">Create</button>
-          </form>
-
-      </div>
-
-      <footer class="my-5 pt-5 text-muted text-center text-small">
-        <p class="mb-1">© 2017-2018 Company Name</p>
-        <ul class="list-inline">
-          <li class="list-inline-item"><a href="#">Privacy</a></li>
-          <li class="list-inline-item"><a href="#">Terms</a></li>
-          <li class="list-inline-item"><a href="#">Support</a></li>
-        </ul>
-      </footer>
-    </div>
-
-
 {% endblock %}

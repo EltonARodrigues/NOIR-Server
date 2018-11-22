@@ -1,29 +1,19 @@
 from django import forms
-from .models import Cadastro
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
-from django.contrib.auth.models import User
-import string, random
+from django.core.exceptions import ValidationError
+from .models import Cadastro
 
-class SignUpForm(UserCreationForm):
-    email = forms.EmailField(max_length=254, help_text='Required. Inform a valid email address.')
 
-    class Meta:
-        model = User
-        fields = ('username', 'email', 'password1', 'password2', )
-
-class MedicaoForm(forms.ModelForm):
-    t= ''
-    t.join(random.choices(string.ascii_uppercase + string.digits, k=6))
-    #name_medicao = forms.CharField()
-    #descricao = forms.CharField(widget=forms.Textarea)
-    #ption = forms.ChoiceField(choices=[('novas_Medicao','Novas medições'),('importar','Importar Medições')], widget=forms.RadioSelect())
-    #code = forms.CharField(max_length = 6)
+class MeasureForm(forms.ModelForm):
     file_csv = forms.FileField(required=False)
+    title = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Title'}))
+    description = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Description'})) # TextArea
 
-    #def __init__(self, *args, **kwargs):
-        #super(MedicaoForm, self).__init__(*args, **kwargs)
-        #self.fields['code'].disabled = True
-        #self.fields['code'].initial = ''.join(random.choices(string.ascii_uppercase + string.digits, k=6))
+    def clean_title(self):
+        title = self.cleaned_data['title']
+        if Cadastro.objects.filter(title=title).exists():
+            raise ValidationError("title is already in use!")
+        return title
 
 
     class Meta:

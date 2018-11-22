@@ -25,7 +25,7 @@ SECRET_KEY = 'l5fqe6^wb2)t@os^i-bw&w27+m%5^(%nw=v-2ke@dl-l*b3^w3'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['192.168.0.4', 'localhost', '10.172.158.87']
 
 
 # Application definition
@@ -130,7 +130,7 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
     '/noir/static/',
 ]
-
+APPEND_SLASH=False
 
 LOGIN_REDIRECT_URL = 'get_context_data'
 LOGOUT_REDIRECT_URL = 'home'

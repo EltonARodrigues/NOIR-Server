@@ -2,25 +2,35 @@
 {% load widget_tweaks %}
 {% load static %}
 
-<link rel="stylesheet" href="{% static 'form.css' %}">
+
+{% block title %}Novo Valor{% endblock %}
 {% block menu %}
 
 <li class="nav-item ">
   <a class="nav-link" href="{% url 'home' %}">Home</a>
 </li>
-<li class="nav-item ">
-    <a class="nav-link" href="{% url 'login' %}">login</a>
-  </li>
-{% endblock %}
 
+<li class="nav-item ">
+  <a class="nav-link" href="{% url 'login' %}">Sign in</a>
+</li>
+
+{% endblock %}
 {% block content %}
+<link rel="stylesheet" href="{% static 'teste.css' %}">
+<link rel="stylesheet" href="{% static 'signup.css' %}">
 
 <div class="container mx-auto">
-    <div class="py-5 text-center">
-      <h2>Create New Account</h2>
-
-    </div>
-        {% if form.errors %}
+    <div class="py-1 wrapper">
+      <form method="post"  class="form-wrapper needs-validation "  enctype="multipart/form-data">
+          {% csrf_token %}
+        <fieldset class="section is-active">
+          <h3>Create Account</h3>
+          {% render_field form.username placeholder="Username" %}
+          <input type="email" class="form-control" id="email" placeholder="you@example.com">
+          {% render_field form.password1 placeholder="Password" %}
+          {% render_field form.password2 placeholder="Confirm password" %}
+          <input class="submit button" type="submit" value="Sign up">
+          {% if form.errors %}
             {% for field in form %}
                 {% for error in field.errors %}
                     <div class="alert alert-danger">
@@ -33,53 +43,9 @@
                     <strong>{{ error|escape }}</strong>
                 </div>
             {% endfor %}
-        {% endif %}
-        <form method="post"  class="container needs-validation " method="post">
-            {% csrf_token %}
-            <div class="mb-3">
-              <label for="address">Username</label>
-              {% render_field form.username class="form-control" %}
-              <div class="invalid-feedback">
-                Please enter your shipping address.
-              </div>
-            </div>
-            <div class="mb-3">
-              <label for="email">Email <span class="text-muted">(Don't Work)</span></label>
-              <input type="email" class="form-control" id="email" placeholder="you@example.com">
-              <div class="invalid-feedback">
-                Please enter a valid email address for shipping updates.
-              </div>
-            </div>
-          <div class="row">
-            <div class="col-md-6 mb-3">
-              <label for="firstName">Password</label>
-              {% render_field form.password1 class="form-control" %}
-              <div class="invalid-feedback">
-                Valid name is required.
-              </div>
-            </div>
-
-          <div class=" col-md-6 mb-3">
-              <label for="description">Password confirmation</label>
-              {% render_field form.password2 class="form-control" %}
-            <div class="invalid-feedback">
-              Please enter a valid csv file.
-            </div>
-          </div>
-
-          <button class="btn btn-primary btn-lg btn-block" type="submit">Create Account</button>
-        </form>
-
+          {% endif %}
+        </fieldset>
+      </form>
     </div>
-
-    <footer class="my-5 pt-5 text-muted text-center text-small">
-      <p class="mb-1">© 2017-2018 Company Name</p>
-      <ul class="list-inline">
-        <li class="list-inline-item"><a href="#">Privacy</a></li>
-        <li class="list-inline-item"><a href="#">Terms</a></li>
-        <li class="list-inline-item"><a href="#">Support</a></li>
-      </ul>
-    </footer>
-  </div>
-
+    </div>
 {% endblock %}
