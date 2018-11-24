@@ -1,7 +1,8 @@
 from django import forms
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.core.exceptions import ValidationError
-from .models import Cadastro
+
+from .models import Sensor
 
 
 class MeasureForm(forms.ModelForm):
@@ -11,11 +12,11 @@ class MeasureForm(forms.ModelForm):
 
     def clean_title(self):
         title = self.cleaned_data['title']
-        if Cadastro.objects.filter(title=title).exists():
+        if Sensor.objects.filter(title=title).exists():
             raise ValidationError("title is already in use!")
         return title
 
 
     class Meta:
-        model = Cadastro
+        model = Sensor
         fields = ('title', 'description','file_csv')

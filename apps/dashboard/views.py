@@ -1,30 +1,30 @@
-from django.views.generic import CreateView, View, TemplateView, FormView
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth.forms import UserCreationForm
-from django.db.models import Avg, Max, Min, Sum, Count
-from django.urls import reverse_lazy
-from django.shortcuts import redirect, render, reverse
-from django.utils import timezone
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.response import Response
-from rest_framework.decorators import list_route
-from rest_framework.viewsets import ModelViewSet
-from rest_framework.settings import api_settings
-from rest_framework_csv.parsers import CSVParser
-from rest_framework_csv.renderers import CSVRenderer
-from rest_framework import status, generics
-from .serializers import ValuesSerializer
-from .models import Valores, Cadastro
-from .forms import MeasureForm
+import json
+from io import StringIO
 
+import requests
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models import Avg, Count, Max, Min, Sum
+from django.shortcuts import redirect, render, reverse
+from django.urls import reverse_lazy
+from django.utils import timezone
+from django.views.generic import CreateView, FormView, TemplateView, View
+from rest_framework import generics, status
+from rest_framework.decorators import list_route
 from rest_framework.exceptions import ParseError
 from rest_framework.parsers import FileUploadParser
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from rest_framework.settings import api_settings
 from rest_framework.views import APIView
+from rest_framework.viewsets import ModelViewSet
+from rest_framework_csv.parsers import CSVParser
+from rest_framework_csv.renderers import CSVRenderer
 
-from io import StringIO
-import requests
-import json
+from .forms import MeasureForm
+from .models import Sensor, GasesCollected
+from .serializers import ValuesSerializer
+
 
 class SignUp(CreateView):
     form_class = UserCreationForm
@@ -55,7 +55,7 @@ class SelecaoView2(View):
 
 class Graph(LoginRequiredMixin, TemplateView):
     template_name = 'graficos.html'
-    model = Valores
+    model = GasesCollected
 
     def get_context_data(self, **kwargs):
         context = super(Graph, self).get_context_data(**kwargs)
@@ -64,16 +64,16 @@ class Graph(LoginRequiredMixin, TemplateView):
         higher_values = list()
         avg_values = list()
 
-        cadastros = Cadastro.objects.filter(author_id=self.request.user)
+        cadastros = Sensor.objects.filter(author_id=self.request.user)
         if self.kwargs.get('pk') is None:
             context['lists'] = cadastros
             context['selec'] = ''
             return context
 
-        elif Cadastro.objects.filter(id=int(self.kwargs.get('pk')),
-                                     author_id=self.request.user):
+        elif Sensor.objects.filter(id=self.kwargs.get('pk'),
+                                   author_id=self.request.user):
 
-            qs = Valores.objects.filter(id=int(self.kwargs.get('pk')))
+            qs = GasesCollected.objects.filter(id=self.kwargs.get('pk'))
 
             for n in ['temperature', 'humidity', 'co', 'co2', 'mp25']:
                 try:
@@ -87,8 +87,8 @@ class Graph(LoginRequiredMixin, TemplateView):
                     pass
 
             context['lists'] = cadastros
-            context['count'] = Valores.objects.filter(
-                id_id=self.kwargs.get('pk')).count()
+            context['count'] = GasesCollected.objects.filter(
+                sensor_id=self.kwargs.get('pk')).count()
             context['avg_values'] = avg_values
             context['lowest_values'] = lowest_values
             context['higher_values'] = higher_values
@@ -105,7 +105,7 @@ class Graph(LoginRequiredMixin, TemplateView):
 
 
 class ClientViewSetJSON(ModelViewSet):
-    queryset = Valores.objects.all()
+    queryset = GasesCollected.objects.all()
     serializer_class = ValuesSerializer
 
     def get_renderer_context(self):
@@ -124,8 +124,7 @@ class ClientViewSetJSON(ModelViewSet):
 
 
 class ClientViewSetCSV(ModelViewSet):
-
-    queryset = Valores.objects.all()
+    queryset = GasesCollected.objects.all()
     parser_classes = (CSVParser,) + tuple(api_settings.DEFAULT_PARSER_CLASSES)
     renderer_classes = (CSVRenderer,) + \
         tuple(api_settings.DEFAULT_RENDERER_CLASSES)
@@ -168,4 +167,3 @@ class MeasureView(FormView):
 
             ClientViewSetCSV()
         return super().form_valid(medicao)
-
