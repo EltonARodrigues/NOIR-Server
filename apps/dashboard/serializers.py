@@ -8,7 +8,7 @@ class ValuesSerializer(ModelSerializer):
 
     class Meta:
         model = GasesCollected
-        fields = ('temperature', 'humidity', 'co' , 'co2', 'mp25', 'id')
+        fields = '__all__'
 
 
 '''
