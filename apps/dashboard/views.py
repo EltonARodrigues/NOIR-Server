@@ -8,7 +8,7 @@ from django.urls import reverse_lazy
 from django.utils import timezone
 from django.views.generic import CreateView, FormView, TemplateView, View
 
-from apps.api.apis import ClientViewSetCSV
+from apps.api.viewsets import ClientViewSetCSV
 
 from .forms import MeasureForm
 from .models import GasesCollected, Sensor
