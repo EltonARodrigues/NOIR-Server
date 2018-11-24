@@ -1,7 +1,7 @@
 from django import forms
 from django.core.exceptions import ValidationError
 
-from .models import Sensor
+from apps.dashboard.models import Sensor
 
 
 class MeasureForm(forms.ModelForm):
