@@ -1,7 +1,7 @@
 import os
 
 from prettyconf import config
-from prettyconf import parse_db_url
+from dj_database_url import parse as parse_db_url
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
