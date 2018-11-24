@@ -19,7 +19,7 @@ class Sensor(UUIDModel):
 
 
 class GasesCollected(UUIDModel):
-    date = models.DateField(null=True)
+    date = models.DateTimeField()
     temperature = models.FloatField(default=0)
     humidity = models.FloatField(default=0)
     co = models.FloatField(default=0)
