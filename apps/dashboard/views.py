@@ -1,28 +1,22 @@
-import json
 from io import StringIO
 
-import requests
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.db.models import Avg, Count, Max, Min, Sum
-from django.shortcuts import redirect, render, reverse
+from django.db.models import Avg, Max, Min
+from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.utils import timezone
 from django.views.generic import CreateView, FormView, TemplateView, View
-from rest_framework import generics, status
+from rest_framework import status
 from rest_framework.decorators import list_route
-from rest_framework.exceptions import ParseError
-from rest_framework.parsers import FileUploadParser
-from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.settings import api_settings
-from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 from rest_framework_csv.parsers import CSVParser
 from rest_framework_csv.renderers import CSVRenderer
 
 from .forms import MeasureForm
-from .models import Sensor, GasesCollected
+from .models import GasesCollected, Sensor
 from .serializers import ValuesSerializer
 
 
@@ -41,6 +35,7 @@ class SelecaoView(View):
             return redirect('get_context_data')
 
         return render(request, self.template_name)
+
 
 class SelecaoView2(View):
     initial = {'key': 'value'}
@@ -162,7 +157,7 @@ class MeasureView(FormView):
             csv_file = self.request.FILES["file_csv"]
             file_data = csv_file.read().decode("utf-8")
 
-            f = StringIO(file_data)
+            StringIO(file_data)
             print(file_data)
 
             ClientViewSetCSV()

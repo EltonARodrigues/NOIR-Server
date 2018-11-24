@@ -1,4 +1,3 @@
-from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
 
 from .models import GasesCollected
@@ -8,7 +7,7 @@ class ValuesSerializer(ModelSerializer):
 
     class Meta:
         model = GasesCollected
-        fields = ('temperature', 'humidity', 'co' , 'co2', 'mp25', 'id')
+        fields = ('temperature', 'humidity', 'co', 'co2', 'mp25', 'id')
 
 
 '''

@@ -18,8 +18,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'apps.dashboard',
-    #'noir.apps.NoirConfig',
-    #'rest_framework_swagger',
+    # 'noir.apps.NoirConfig',
+    # 'rest_framework_swagger',
     'rest_framework',
     'widget_tweaks',
 ]
@@ -104,7 +104,7 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
     '/noir/static/',
 ]
-APPEND_SLASH=False
+APPEND_SLASH = False
 
 LOGIN_REDIRECT_URL = 'get_context_data'
 LOGOUT_REDIRECT_URL = 'home'
