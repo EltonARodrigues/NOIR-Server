@@ -19,6 +19,7 @@ pylint = "*"
 pytest = "*"
 isort = "*"
 flake8 = "*"
+autoflake = "*"
 
 [requires]
 python_version = "3.7"
