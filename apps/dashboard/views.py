@@ -73,7 +73,7 @@ class Graph(LoginRequiredMixin, TemplateView):
         elif Sensor.objects.filter(id=self.kwargs.get('pk'),
                                    author_id=self.request.user):
 
-            qs = GasesCollected.objects.filter(id=self.kwargs.get('pk'))
+            qs = GasesCollected.objects.filter(sensor=self.kwargs.get('pk'))
 
             for n in ['temperature', 'humidity', 'co', 'co2', 'mp25']:
                 try:
