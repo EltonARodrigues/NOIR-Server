@@ -1,9 +1,10 @@
+from functools import partial
+
 from rest_framework import status
 from rest_framework.exceptions import ValidationError
-from rest_framework_csv.parsers import CSVParser
 from rest_framework.settings import api_settings
-from functools import partial
 from rest_framework.viewsets import ModelViewSet
+from rest_framework_csv.parsers import CSVParser
 
 from apps.dashboard.models import GasesCollected
 

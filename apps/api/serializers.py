@@ -1,4 +1,4 @@
-from rest_framework.serializers import ModelSerializer, ListSerializer
+from rest_framework.serializers import ListSerializer, ModelSerializer
 
 from apps.dashboard.models import GasesCollected
 
