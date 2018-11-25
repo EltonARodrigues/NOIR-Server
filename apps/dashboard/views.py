@@ -8,7 +8,7 @@ from django.urls import reverse_lazy
 from django.utils import timezone
 from django.views.generic import CreateView, FormView, TemplateView, View
 
-from apps.api.viewsets import ClientViewSetCSV
+from apps.api.viewsets import GasesCollectedViewSet
 
 from .forms import MeasureForm
 from .models import GasesCollected, Sensor
@@ -111,5 +111,5 @@ class MeasureView(FormView):
             StringIO(file_data)
             print(file_data)
 
-            ClientViewSetCSV()
+            GasesCollectedViewSet()
         return super().form_valid(medicao)

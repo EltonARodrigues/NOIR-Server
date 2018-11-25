@@ -1,9 +1,8 @@
 from rest_framework import routers
 
-from .viewsets import ClientViewSetCSV, ClientViewSetJSON
+from .viewsets import GasesCollectedViewSet
 
 router = routers.SimpleRouter()
-router.register(r'json', ClientViewSetJSON)
-router.register(r'csv', ClientViewSetCSV)
+router.register(r'gases', GasesCollectedViewSet)
 
 urlpatterns = router.urls
