@@ -6,9 +6,9 @@ from rest_framework.settings import api_settings
 from rest_framework.viewsets import ModelViewSet
 from rest_framework_csv.parsers import CSVParser
 
-from apps.dashboard.models import GasesCollected
+from apps.dashboard.models import GasesCollected, Sensor
 
-from .serializers import GasesCollectedSerializer
+from .serializers import GasesCollectedSerializer, SensorSerializer
 
 
 class GasesCollectedViewSet(ModelViewSet):
@@ -22,3 +22,8 @@ class GasesCollectedViewSet(ModelViewSet):
             return partial(serializer_class, many=True)
 
         return serializer_class
+
+
+class SensorViewSet(ModelViewSet):
+    queryset = Sensor.objects.all()
+    serializer_class = SensorSerializer
