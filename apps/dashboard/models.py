@@ -13,9 +13,16 @@ class UUIDModel(Model):
 
 
 class Sensor(UUIDModel):
-    title = models.CharField(max_length=50, unique=True)
+    title = models.CharField(max_length=50)
     description = models.CharField(max_length=200)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    class Meta:
+        unique_together = (('title', 'author', 'description',),)
+
+
+    def __str__(self):
+        return f'{self.title}-{self.id}'
 
 
 class GasesCollected(UUIDModel):
@@ -26,3 +33,9 @@ class GasesCollected(UUIDModel):
     co2 = models.FloatField(default=0)
     mp25 = models.FloatField(default=0)
     sensor = models.ForeignKey(Sensor, on_delete=models.CASCADE)
+
+    class Meta:
+        unique_together = (('created_at', 'sensor'),)
+
+    def __str__(self):
+        return f'{self.created_at}'
