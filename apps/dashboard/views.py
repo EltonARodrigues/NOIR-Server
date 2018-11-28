@@ -62,7 +62,7 @@ class Graph(LoginRequiredMixin, TemplateView):
 
             qs = GasesCollected.objects.filter(
                 sensor=self.kwargs.get('pk')
-            ).order_by('created_at')[100:]
+            ).order_by('-created_at')[:100]
 
             for n in ['temperature', 'humidity', 'co', 'co2', 'mp25']:
                 try:
