@@ -98,9 +98,9 @@ class Graph(LoginRequiredMixin, TemplateView):
 
 
 class MeasureView(FormView):
-    template_name = 'setup.html'
+    template_name = 'measuring_form.html'
     form_class = MeasureForm
-    success_url = '/medicao/'
+    success_url = '/dashboard/'
 
     def form_valid(self, form):
         medicao = form.save(commit=False)
