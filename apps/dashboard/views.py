@@ -75,7 +75,6 @@ class Graph(LoginRequiredMixin, TemplateView):
                 except BaseException:
                     pass
 
-            breakpoint()
             context['lists'] = cadastros
             context['count'] = qs.count()
             context['avg_values'] = avg_values
