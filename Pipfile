@@ -16,6 +16,7 @@ dj-database-url = "*"
 gunicorn = "*"
 psycopg2 = "*"
 whitenoise = "*"
+bokeh = "*"
 
 [dev-packages]
 pylint = "*"
