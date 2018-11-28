@@ -13,10 +13,6 @@ from apps.api.viewsets import GasesCollectedViewSet
 from .forms import MeasureForm
 from .models import GasesCollected, Sensor
 
-from bokeh.plotting import figure
-from bokeh.resources import CDN
-from bokeh.embed import components
-
 class SignUp(CreateView):
     form_class = UserCreationForm
     success_url = reverse_lazy('login')
@@ -65,7 +61,7 @@ class Graph(LoginRequiredMixin, TemplateView):
         elif Sensor.objects.filter(id=self.kwargs.get('pk'),
                                    author_id=self.request.user):
 
-            qs = GasesCollected.objects.filter(sensor=self.kwargs.get('pk'))
+            qs = GasesCollected.objects.filter(sensor=self.kwargs.get('pk'))[100:]
 
             for n in ['temperature', 'humidity', 'co', 'co2', 'mp25']:
                 try:
