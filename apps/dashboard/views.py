@@ -43,7 +43,6 @@ class SelecaoView2(View):
 
 class Graph(LoginRequiredMixin, TemplateView):
     template_name = 'dashboard.html'
-    model = GasesCollected
 
     def get_context_data(self, **kwargs):
         context = super(Graph, self).get_context_data(**kwargs)
@@ -61,7 +60,9 @@ class Graph(LoginRequiredMixin, TemplateView):
         elif Sensor.objects.filter(id=self.kwargs.get('pk'),
                                    author_id=self.request.user):
 
-            qs = GasesCollected.objects.filter(sensor=self.kwargs.get('pk'))[100:]
+            qs = GasesCollected.objects.filter(
+                sensor=self.kwargs.get('pk')
+            ).order_by('created_at')[:100]
 
             for n in ['temperature', 'humidity', 'co', 'co2', 'mp25']:
                 try:
@@ -74,7 +75,7 @@ class Graph(LoginRequiredMixin, TemplateView):
                 except BaseException:
                     pass
 
-
+            breakpoint()
             context['lists'] = cadastros
             context['count'] = qs.count()
             context['avg_values'] = avg_values
@@ -85,7 +86,7 @@ class Graph(LoginRequiredMixin, TemplateView):
             context['co'] = [q.co for q in qs]
             context['co2'] = [q.co2 for q in qs]
             context['pm'] = [q.mp25 for q in qs]
-            context['x'] = [q for q in range(len(qs))]
+            context['x'] = [q for q in range(qs.count())]
 
             return context
         else:
