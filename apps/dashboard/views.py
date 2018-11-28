@@ -76,8 +76,7 @@ class Graph(LoginRequiredMixin, TemplateView):
 
 
             context['lists'] = cadastros
-            context['count'] = GasesCollected.objects.filter(
-                sensor_id=self.kwargs.get('pk')).count()
+            context['count'] = qs.count()
             context['avg_values'] = avg_values
             context['lowest_values'] = lowest_values
             context['higher_values'] = higher_values
