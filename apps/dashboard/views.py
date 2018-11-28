@@ -13,6 +13,9 @@ from apps.api.viewsets import GasesCollectedViewSet
 from .forms import MeasureForm
 from .models import GasesCollected, Sensor
 
+from bokeh.plotting import figure
+from bokeh.resources import CDN
+from bokeh.embed import components
 
 class SignUp(CreateView):
     form_class = UserCreationForm
@@ -43,7 +46,7 @@ class SelecaoView2(View):
 
 
 class Graph(LoginRequiredMixin, TemplateView):
-    template_name = 'graficos.html'
+    template_name = 'dashboard.html'
     model = GasesCollected
 
     def get_context_data(self, **kwargs):
@@ -75,6 +78,7 @@ class Graph(LoginRequiredMixin, TemplateView):
                 except BaseException:
                     pass
 
+
             context['lists'] = cadastros
             context['count'] = GasesCollected.objects.filter(
                 sensor_id=self.kwargs.get('pk')).count()
@@ -94,9 +98,9 @@ class Graph(LoginRequiredMixin, TemplateView):
 
 
 class MeasureView(FormView):
-    template_name = 'setup.html'
+    template_name = 'measuring_form.html'
     form_class = MeasureForm
-    success_url = '/medicao/'
+    success_url = '/dashboard/'
 
     def form_valid(self, form):
         medicao = form.save(commit=False)
