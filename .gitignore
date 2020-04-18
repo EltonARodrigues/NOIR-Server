@@ -127,3 +127,6 @@ dmypy.json
 .pyre/
 
 # End of https://www.gitignore.io/api/django
+
+.xdp_sqlite.db.OFQZI0
+*.db

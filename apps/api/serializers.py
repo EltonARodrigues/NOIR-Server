@@ -1,5 +1,5 @@
-from rest_framework.serializers import ListSerializer, ModelSerializer
-
+from rest_framework.serializers import ListSerializer, ModelSerializer, PrimaryKeyRelatedField
+from rest_framework import serializers
 from apps.dashboard.models import GasesCollected, Sensor
 
 
@@ -17,6 +17,14 @@ class GasesCollectedSerializer(ModelSerializer):
 
 
 class SensorSerializer(ModelSerializer):
+    gases = GasesCollectedSerializer(many=True, read_only=True)
     class Meta:
         model = Sensor
-        fields = '__all__'
+        fields = ('id', 'title', 'gases')
+
+
+class SensorsSerializer(ModelSerializer):
+
+    class Meta:
+        model = Sensor
+        fields = ('title', 'description', 'author')

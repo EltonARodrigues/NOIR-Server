@@ -32,7 +32,7 @@ class GasesCollected(UUIDModel):
     co = models.FloatField(default=0)
     co2 = models.FloatField(default=0)
     mp25 = models.FloatField(default=0)
-    sensor = models.ForeignKey(Sensor, on_delete=models.CASCADE)
+    sensor = models.ForeignKey(Sensor, related_name='gases', on_delete=models.CASCADE)
 
     class Meta:
         unique_together = (('created_at', 'sensor'),)
